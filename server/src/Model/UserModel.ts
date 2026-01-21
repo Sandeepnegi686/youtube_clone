@@ -6,7 +6,7 @@ const Schema = new mongoose.Schema<UserType>(
     name: { type: String },
     image: { type: String },
     email: { type: String },
-    emailVerified: { type: Date },
+    emailVerified: { type: Boolean },
     hashedPassword: { type: String },
     favoriteIds: { type: [mongoose.Schema.Types.ObjectId] },
     sessions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Session" }],

@@ -6,13 +6,13 @@ interface UserType extends Document {
   name: string;
   image?: string;
   email?: string;
-  emailVerified?: Date;
+  emailVerified?: boolean;
   hashedPassword?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   favoriteIds?: Schema.Types.ObjectId[];
-  sessions: SessionType[];
-  accounts: AccountType[];
+  sessions?: SessionType[];
+  accounts?: AccountType[];
 }
 
 export default UserType;

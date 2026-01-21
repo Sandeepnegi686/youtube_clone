@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import UserModel from "../Model/UserModel";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+
 require("dotenv").config();
 
 interface SignUpType {
@@ -34,7 +35,7 @@ async function signUp(req: Request<{}, {}, SignUpType, {}>, res: Response) {
 
     const data = {
       _id: user._id,
-      name: user.name,
+      email: user.email,
     };
 
     const token = jwt.sign(data, JWT_SECRET, {
@@ -76,7 +77,10 @@ async function loginUser(req: Request<{}, {}, LoginType, {}>, res: Response) {
       return res.status(400).json({ s: false, m: "creds are wrong" });
     }
 
-    const data = { _id: existingUser._id, name: existingUser.name };
+    const data = {
+      _id: existingUser._id,
+      email: existingUser.email,
+    };
     const token = jwt.sign(data, JWT_SECRET, {
       expiresIn: 60 * 60 * 24,
     });
