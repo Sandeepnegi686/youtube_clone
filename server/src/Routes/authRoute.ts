@@ -16,16 +16,14 @@ router.get(
   passport.authenticate("google", { scope: ["profile", "email"] }),
 );
 
-interface AuthUserRequest extends Request {
-  user: { _id: string; email: string };
-}
-
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/auth", session: false }),
-  function (req: AuthUserRequest, res: Response) {
+  (req: Request, res: Response) => {
     // Successful authentication, redirect home.
+    // {_id: string, email: string}
     try {
+      if (!req.user) return res.status(401);
       const data = { _id: req.user._id, email: req.user.email };
       const token = jwt.sign(data, JWT_SECRET, {
         expiresIn: 60 * 60 * 24, // 1 day
@@ -39,6 +37,8 @@ router.get(
   },
 );
 
-router.get("/me", authenticateUser);
+router.get("/me", authenticateUser, (req: Request, res: Response) => {
+  return res.status(200).json({ s: true, d: req.user });
+});
 
 export default router;
