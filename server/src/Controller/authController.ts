@@ -98,7 +98,7 @@ async function loginUser(req: Request<{}, {}, LoginType, {}>, res: Response) {
     res.cookie("access-token", token, {
       maxAge: 1000 * 60 * 60 * 24,
       httpOnly: true,
-      sameSite: "lax",
+      // sameSite: "lax",
     });
     return res.status(200).json({
       s: true,

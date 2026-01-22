@@ -2,7 +2,7 @@
 
 import API_BASE_URL from "@/lib/api";
 import axios from "axios";
-import { redirect } from "react";
+import { useRouter } from "next/navigation";
 import {
   useContext,
   useState,
@@ -17,6 +17,7 @@ type ContextType = {
   user: UserType | null;
   setUser: Dispatch<SetStateAction<UserType | null>>;
   login: (email: string, password: string) => void;
+  signIn: (name: string, email: string, password: string) => void;
 } | null;
 
 const appContext = createContext<ContextType>(null);
@@ -30,32 +31,73 @@ export default function AppContext({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState<UserType | null>(null);
+  const router = useRouter();
 
   useEffect(function () {
-    fetch(`${API}/auth/me`, {
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => setUser(data.d));
-    // .catch(() => (window.location.href = "/auth"));
+    async function fetchUser() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP server error, Status Code: ${response.status}`);
+        }
+        const data = await response.json();
+        if (!data.s) {
+          throw new Error(data.m);
+        }
+        setUser(data.d);
+        console.log(data.d);
+      } catch (error) {
+        const errMsg =
+          error instanceof Error ? error.message : "Something went wrong";
+        console.log(errMsg);
+      }
+    }
+    fetchUser();
   }, []);
+
+  async function signIn(name: string, email: string, password: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/auth/signup`, {
+        body: JSON.stringify({ name, email, password }),
+        credentials: "include",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await response.json();
+      if (data.s) {
+        setUser(data.user);
+        router.push("/");
+      } else {
+        console.log(data.m);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function login(email: string, password: string) {
     try {
-      const { data } = await API.post(`/auth/login`, {
-        email,
-        password,
+      const response = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
+        body: JSON.stringify({ email, password }),
+        credentials: "include",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
       });
-      const { user } = data;
-      console.log(user);
-      setUser(user);
-      window.location.replace("/");
+      const data = await response.json();
+      if (data.s) {
+        setUser(data.user);
+        router.push("/");
+      } else {
+        console.log(data.m);
+      }
     } catch (error) {
       console.log(error);
     }
   }
   return (
-    <appContext.Provider value={{ user, setUser, login }}>
+    <appContext.Provider value={{ user, setUser, login, signIn }}>
       {children}
     </appContext.Provider>
   );

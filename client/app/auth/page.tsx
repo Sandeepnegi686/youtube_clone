@@ -1,12 +1,17 @@
 "use client";
 import Image from "next/image";
 import Input from "@/app/_components/Input";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+
 import { useAppContext } from "@/context/appContext";
+import { useRouter } from "next/navigation";
+
+import { FcGoogle } from "react-icons/fc";
 
 type varientType = "login" | "register";
 
 export default function Page() {
+  const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -18,8 +23,7 @@ export default function Page() {
     );
   }, []);
 
-  // console.log(API);
-  const { login } = useAppContext();
+  const { login, user, signIn } = useAppContext();
 
   function handleSubmit() {
     if (varient === "login") {
@@ -27,6 +31,11 @@ export default function Page() {
         return;
       }
       login(email, password);
+    } else {
+      if (!email || !password || !name) {
+        return;
+      }
+      signIn(name, email, password);
     }
   }
 
@@ -79,6 +88,14 @@ export default function Page() {
           >
             {varient === "login" ? "Login" : "Sign up"}
           </button>
+          <div className="flex justify-center items-center mt-8">
+            <button
+              className="flex justify-center items-center w-10 h-10 bg-white hover:bg-gray-200 transition cursor-pointer rounded-full"
+              onClick={() => router.push("/")}
+            >
+              <FcGoogle size={30} />
+            </button>
+          </div>
           <p className="text-neutral-500 mt-12">
             {varient === "login"
               ? "First time using Netflix?"
