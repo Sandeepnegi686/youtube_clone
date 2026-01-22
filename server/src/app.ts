@@ -1,14 +1,17 @@
 import express, { Express, Request, Response } from "express";
 import { connect } from "mongoose";
 require("dotenv").config();
+import cors from "cors";
 
 import authRouter from "./Routes/authRoute";
 
 const app: Express = express();
 const DB = process.env.DB_URL || "";
 const PORT = process.env.PORT || 0;
+const CLIENT_URL = process.env.CLIENT_URL || "";
 
 app.use(express.json());
+app.use(cors({ origin: CLIENT_URL, credentials: true }));
 
 app.get("/", (_: Request, res: Response) => res.send("hello from Ts - node"));
 

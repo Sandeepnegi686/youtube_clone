@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Input from "@/app/_components/Input";
 import { useCallback, useState } from "react";
+import { useAppContext } from "@/context/appContext";
 
 type varientType = "login" | "register";
 
@@ -16,6 +17,18 @@ export default function Page() {
       currentVarient === "login" ? "register" : "login",
     );
   }, []);
+
+  // console.log(API);
+  const { login } = useAppContext();
+
+  function handleSubmit() {
+    if (varient === "login") {
+      if (!email || !password) {
+        return;
+      }
+      login(email, password);
+    }
+  }
 
   return (
     <div className="relative h-dvh w-full">
@@ -60,7 +73,10 @@ export default function Page() {
               type="password"
             />
           </div>
-          <button className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition cursor-pointer font-medium">
+          <button
+            className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition cursor-pointer font-medium"
+            onClick={handleSubmit}
+          >
             {varient === "login" ? "Login" : "Sign up"}
           </button>
           <p className="text-neutral-500 mt-12">

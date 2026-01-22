@@ -35,6 +35,7 @@ async function signUp(req: Request<{}, {}, SignUpType, {}>, res: Response) {
 
     const data = {
       _id: user._id,
+      name: user.name,
       email: user.email,
     };
 
@@ -42,11 +43,19 @@ async function signUp(req: Request<{}, {}, SignUpType, {}>, res: Response) {
       expiresIn: 60 * 60 * 24,
     });
 
+    res.cookie("access-token", token, {
+      maxAge: 1000 * 60 * 60 * 24,
+      httpOnly: true,
+    });
+
     return res.status(201).json({
       s: true,
       m: "user created",
-      token,
-      user,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
     });
   } catch (error) {
     console.log(error);
@@ -79,17 +88,26 @@ async function loginUser(req: Request<{}, {}, LoginType, {}>, res: Response) {
 
     const data = {
       _id: existingUser._id,
+      name: existingUser.name,
       email: existingUser.email,
     };
     const token = jwt.sign(data, JWT_SECRET, {
       expiresIn: 60 * 60 * 24,
     });
 
+    res.cookie("access-token", token, {
+      maxAge: 1000 * 60 * 60 * 24,
+      httpOnly: true,
+      sameSite: "lax",
+    });
     return res.status(200).json({
       s: true,
       m: "logged in",
-      token,
-      user: existingUser,
+      user: {
+        _id: existingUser._id,
+        name: existingUser.name,
+        email: existingUser.email,
+      },
     });
   } catch (error) {
     console.log(error);

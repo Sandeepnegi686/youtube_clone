@@ -1,5 +1,5 @@
 import express, { Express, NextFunction, Request, Response } from "express";
-import { loginUser, signUp } from "../Controller/auth";
+import { loginUser, signUp } from "../Controller/authController";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import authenticateUser from "../middleware/authMiddleware";
@@ -18,22 +18,25 @@ router.get(
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/auth", session: false }),
+  passport.authenticate("google", {
+    failureRedirect: `${CLIENT_URL}/auth`,
+    session: false,
+  }),
+
   (req: Request, res: Response) => {
     // Successful authentication, redirect home.
-    // {_id: string, email: string}
-    try {
-      if (!req.user) return res.status(401);
-      const data = { _id: req.user._id, email: req.user.email };
-      const token = jwt.sign(data, JWT_SECRET, {
-        expiresIn: 60 * 60 * 24, // 1 day
-      });
-      res.redirect(`${CLIENT_URL}/auth-success?token=${token}`);
-    } catch (error) {
-      res.redirect(`${CLIENT_URL}/auth?login=google-login-failed`);
-      console.log(error);
-    }
-    res.redirect(`${CLIENT_URL}/auth`);
+    const user = req.user as any;
+
+    if (user) return res.status(401).redirect(`${CLIENT_URL}/auth`);
+
+    const data = { _id: user._id, email: user.email };
+    const token = jwt.sign(data, JWT_SECRET, {
+      expiresIn: 60 * 60 * 24, // 1 day
+    });
+
+    const oneDay = new Date(Date.now() + 1000 * 60 * 60 * 24);
+    res.cookie("access-token", token, { expires: oneDay, httpOnly: true });
+    res.redirect(CLIENT_URL);
   },
 );
 

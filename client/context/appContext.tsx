@@ -1,20 +1,28 @@
 "use client";
 
+import API_BASE_URL from "@/lib/api";
+import axios from "axios";
+import { redirect } from "react";
 import {
   useContext,
   useState,
   createContext,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from "react";
 type UserType = { _id: string; email: string };
 
 type ContextType = {
-  user: UserType;
+  user: UserType | null;
   setUser: Dispatch<SetStateAction<UserType | null>>;
+  login: (email: string, password: string) => void;
 } | null;
 
 const appContext = createContext<ContextType>(null);
+const API = axios.create({
+  baseURL: `${API_BASE_URL}/api/v1`,
+});
 
 export default function AppContext({
   children,
@@ -23,34 +31,31 @@ export default function AppContext({
 }) {
   const [user, setUser] = useState<UserType | null>(null);
 
-  //request
-  authFetch.interceptors.request.use(
-    function (config) {
-      config.headers["Authorization"] = `Bearer ${state.token}`;
-      return config;
-    },
-    function (error) {
+  useEffect(function () {
+    fetch(`${API}/auth/me`, {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => setUser(data.d));
+    // .catch(() => (window.location.href = "/auth"));
+  }, []);
+
+  async function login(email: string, password: string) {
+    try {
+      const { data } = await API.post(`/auth/login`, {
+        email,
+        password,
+      });
+      const { user } = data;
+      console.log(user);
+      setUser(user);
+      window.location.replace("/");
+    } catch (error) {
       console.log(error);
-      return Promise.reject(error);
-    },
-  );
-
-  //response
-  authFetch.interceptors.response.use(
-    function (response) {
-      return response;
-    },
-    function (error) {
-      if (error.response.status == 400) {
-        logoutUser();
-        console.log(error);
-      }
-      return Promise.reject(error);
-    },
-  );
-
+    }
+  }
   return (
-    <appContext.Provider value={{ user, setUser }}>
+    <appContext.Provider value={{ user, setUser, login }}>
       {children}
     </appContext.Provider>
   );
