@@ -7,6 +7,7 @@ import { useAppContext } from "@/context/appContext";
 import { useRouter } from "next/navigation";
 
 import { FcGoogle } from "react-icons/fc";
+import API_BASE_URL from "@/lib/api";
 
 type varientType = "login" | "register";
 
@@ -91,7 +92,7 @@ export default function Page() {
           <div className="flex justify-center items-center mt-8">
             <button
               className="flex justify-center items-center w-10 h-10 bg-white hover:bg-gray-200 transition cursor-pointer rounded-full"
-              onClick={() => router.push("/")}
+              onClick={() => router.push(`${API_BASE_URL}/api/v1/auth/google`)}
             >
               <FcGoogle size={30} />
             </button>

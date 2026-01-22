@@ -22,21 +22,21 @@ router.get(
     failureRedirect: `${CLIENT_URL}/auth`,
     session: false,
   }),
-
   (req: Request, res: Response) => {
     // Successful authentication, redirect home.
     const user = req.user as any;
 
     if (user) return res.status(401).redirect(`${CLIENT_URL}/auth`);
 
-    const data = { _id: user._id, email: user.email };
+    const data = { _id: user._id, name: user.name, email: user.email };
     const token = jwt.sign(data, JWT_SECRET, {
       expiresIn: 60 * 60 * 24, // 1 day
     });
-
-    const oneDay = new Date(Date.now() + 1000 * 60 * 60 * 24);
-    res.cookie("access-token", token, { expires: oneDay, httpOnly: true });
-    res.redirect(CLIENT_URL);
+    res.cookie("access-token", token, {
+      maxAge: 1000 * 60 * 60 * 24,
+      httpOnly: true,
+    });
+    return res.redirect(`${CLIENT_URL}/auth`);
   },
 );
 

@@ -3,6 +3,7 @@ import { connect } from "mongoose";
 require("dotenv").config();
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import "./config/passport";
 
 import authRouter from "./Routes/authRoute";
 
