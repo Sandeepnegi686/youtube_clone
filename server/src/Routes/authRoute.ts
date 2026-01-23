@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { loginUser, signUp } from "../Controller/authController";
+import { loginUser, signOut, signUp } from "../Controller/authController";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import authenticateUser from "../middleware/authMiddleware";
@@ -10,6 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "";
 
 router.post("/signup", signUp);
 router.post("/login", loginUser);
+router.get("/logout", signOut);
 
 router.get(
   "/google",

@@ -9,7 +9,7 @@ import {
   SetStateAction,
   useEffect,
 } from "react";
-type UserType = { _id: string; email: string };
+type UserType = { _id: string; email: string; name: string };
 
 type ContextType = {
   user: UserType | null;

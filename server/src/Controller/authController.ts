@@ -117,4 +117,9 @@ async function loginUser(req: Request<{}, {}, LoginType, {}>, res: Response) {
   }
 }
 
-export { signUp, loginUser };
+async function signOut(req: Request, res: Response) {
+  res.clearCookie("access-token");
+  return res.json({ s: true, m: "logged out" });
+}
+
+export { signUp, loginUser, signOut };
