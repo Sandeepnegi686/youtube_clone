@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Input from "@/app/_components/Input";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { useAppContext } from "@/context/appContext";
 import { useRouter } from "next/navigation";

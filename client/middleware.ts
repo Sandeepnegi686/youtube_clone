@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function middleware(req: NextRequest, res: NextResponse) {
   const accesToken = req.cookies.get("access-token");
   const token = accesToken?.value;
-  console.log(req.nextUrl.pathname);
+  // console.log(req.nextUrl.pathname);
   const isAuthPage = req.nextUrl.pathname.startsWith("/auth");
   if (!isAuthPage && !token) {
     return NextResponse.redirect(new URL("/auth", req.url));

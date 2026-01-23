@@ -26,7 +26,7 @@ router.get(
     // Successful authentication, redirect home.
     const user = req.user as any;
 
-    if (user) return res.status(401).redirect(`${CLIENT_URL}/auth`);
+    // if (user) return res.status(401).redirect(`${CLIENT_URL}/auth`);
 
     const data = { _id: user._id, name: user.name, email: user.email };
     const token = jwt.sign(data, JWT_SECRET, {
@@ -36,7 +36,7 @@ router.get(
       maxAge: 1000 * 60 * 60 * 24,
       httpOnly: true,
     });
-    return res.redirect(`${CLIENT_URL}/auth`);
+    return res.redirect(`${CLIENT_URL}/auth-status?googleLoginSuccess=true`);
   },
 );
 
