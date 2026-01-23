@@ -1,4 +1,4 @@
-import express, { Express, NextFunction, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import { loginUser, signUp } from "../Controller/authController";
 import passport from "passport";
 import jwt from "jsonwebtoken";
@@ -25,8 +25,6 @@ router.get(
   (req: Request, res: Response) => {
     // Successful authentication, redirect home.
     const user = req.user as any;
-
-    // if (user) return res.status(401).redirect(`${CLIENT_URL}/auth`);
 
     const data = { _id: user._id, name: user.name, email: user.email };
     const token = jwt.sign(data, JWT_SECRET, {

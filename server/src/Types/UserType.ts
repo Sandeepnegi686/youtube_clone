@@ -5,7 +5,7 @@ import SessionType from "./SessionType";
 interface UserType extends Document {
   name: string;
   image?: string;
-  email?: string;
+  email: string;
   emailVerified?: boolean;
   hashedPassword?: string;
   createdAt?: Date;
