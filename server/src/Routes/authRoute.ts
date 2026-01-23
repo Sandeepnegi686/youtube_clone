@@ -34,7 +34,7 @@ router.get(
       maxAge: 1000 * 60 * 60 * 24,
       httpOnly: true,
     });
-    return res.redirect(`${CLIENT_URL}/auth-status?googleLoginSuccess=true`);
+    return res.redirect(`${CLIENT_URL}/auth-successfull`);
   },
 );
 

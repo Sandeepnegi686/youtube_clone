@@ -89,13 +89,19 @@ export default function Page() {
           >
             {varient === "login" ? "Login" : "Sign up"}
           </button>
+          <div className="mt-10 border-t border-gray-400 mx-auto"></div>
           <div className="flex justify-center items-center mt-8">
-            <button
-              className="flex justify-center items-center w-10 h-10 bg-white hover:bg-gray-200 transition cursor-pointer rounded-full"
+            <div
+              className="flex justify-center items-center rounded-full py-1 px-2 pr-3 bg-white hover:bg-gray-200 transition cursor-pointer"
               onClick={() => router.push(`${API_BASE_URL}/api/v1/auth/google`)}
             >
-              <FcGoogle size={30} />
-            </button>
+              <button className="flex justify-center items-center w-10 h-10 rounded-full">
+                <FcGoogle size={30} />
+              </button>
+              <p className="pl-2 text-md text-gray-800 font-semibold">
+                Sign In Using Google
+              </p>
+            </div>
           </div>
           <p className="text-neutral-500 mt-12">
             {varient === "login"

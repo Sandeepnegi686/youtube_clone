@@ -1,7 +1,5 @@
 "use client";
-
 import API_BASE_URL from "@/lib/api";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import {
   useContext,
@@ -21,9 +19,6 @@ type ContextType = {
 } | null;
 
 const appContext = createContext<ContextType>(null);
-const API = axios.create({
-  baseURL: `${API_BASE_URL}/api/v1`,
-});
 
 export default function AppContext({
   children,
@@ -44,10 +39,9 @@ export default function AppContext({
         }
         const data = await response.json();
         if (!data.s) {
-          throw new Error(data.m);
+          setUser(null);
         }
         setUser(data.d);
-        console.log(data.d);
       } catch (error) {
         const errMsg =
           error instanceof Error ? error.message : "Something went wrong";
