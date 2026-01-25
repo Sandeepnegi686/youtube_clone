@@ -1,18 +1,7 @@
 import { Request, Response } from "express";
 import MovieModel from "../Model/MovieModel";
-import { Types } from "mongoose";
-
-// declare global {
-//   namespace Express {
-//     interface Request {
-//       user?: {
-//         _id: Types.ObjectId | string;
-//         name: string;
-//         email: string;
-//       } & Record<string, any>;
-//     }
-//   }
-// }
+import mongoose from "mongoose";
+import UserModel from "../Model/UserModel";
 
 async function getRandomMovie(_: Request, res: Response) {
   try {
@@ -35,14 +24,29 @@ async function getAllMovies(_: Request, res: Response) {
     return res.status(500).json({ s: false, m: "Something went wrong.." });
   }
 }
-async function addFavoriteMovie(req: Request, res: Response) {
+async function addFavoriteMovie(
+  req: Request<{}, {}, { favoriteMovieId: string }, {}>,
+  res: Response,
+) {
   try {
     if (!req.user) {
       return res.status(401).json({ s: false, m: "Unauthorized" });
     }
-    const user = req.user as any;
-    const movies = await MovieModel.find();
-    return res.status(200).json({ s: true, d: movies });
+    const req_user = req.user as any;
+    const movieId = req?.body?.favoriteMovieId;
+    console.log(req.body);
+    if (mongoose.Types.ObjectId.isValid(movieId)) {
+      return res.status(400).json({ s: false, m: "unknown book Id" });
+    }
+
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      req_user._id,
+      {
+        $addToSet: { favoriteIds: movieId },
+      },
+      { new: true },
+    );
+    return res.status(200).json({ s: true, m: "Movie Saved", d: updatedUser });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ s: false, m: "Something went wrong.." });
