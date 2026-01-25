@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    domains: [
+      "upload.wikimedia.org",
+      "m.media-amazon.com",
+      "mango.blender.org",
+      "download.blender.org",
+    ],
+  },
 };
 
 export default nextConfig;

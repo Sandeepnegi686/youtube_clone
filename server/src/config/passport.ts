@@ -1,7 +1,7 @@
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import UserModel from "../Model/UserModel";
 import passport from "passport";
-import UserType from "../Types/UserType";
+import { Express } from "express";
 
 passport.use(
   new GoogleStrategy(
@@ -14,10 +14,9 @@ passport.use(
       const email = profile.emails ? profile.emails?.[0].value : "";
       const image = profile.photos ? profile.photos[0].value : "";
       try {
-        let user: UserType | null = await UserModel.findOne({
+        let user = await UserModel.findOne({
           email,
         });
-        // console.log(user);
         if (!user) {
           user = await UserModel.create({
             name: profile.displayName,
@@ -26,7 +25,7 @@ passport.use(
             emailVerified: true,
           });
         }
-        return cb(null, user);
+        return cb(null, user as Express.User);
       } catch (error) {
         console.log(error);
         return cb(error, undefined);

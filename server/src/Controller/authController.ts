@@ -3,8 +3,6 @@ import UserModel from "../Model/UserModel";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-require("dotenv").config();
-
 interface SignUpType {
   name: string;
   email: string;
@@ -103,6 +101,7 @@ async function loginUser(req: Request<{}, {}, LoginType, {}>, res: Response) {
     return res.status(200).json({
       s: true,
       m: "logged in",
+      token,
       user: {
         _id: existingUser._id,
         name: existingUser.name,

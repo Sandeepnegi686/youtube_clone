@@ -6,6 +6,8 @@ import cookieParser from "cookie-parser";
 import "./config/passport";
 
 import authRouter from "./Routes/authRoute";
+import moviesRouter from "./Routes/moviesRoutes";
+import authenticateUser from "./middleware/authMiddleware";
 
 const app: Express = express();
 const DB = process.env.DB_URL || "";
@@ -19,6 +21,7 @@ app.use(cookieParser());
 app.get("/", (_: Request, res: Response) => res.send("hello from Ts - node"));
 
 app.use("/api/v1/auth/", authRouter);
+app.use("/api/v1/movies/", authenticateUser, moviesRouter);
 
 app.listen(PORT, () => {
   console.log("Server started at port :", PORT);

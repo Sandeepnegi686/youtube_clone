@@ -38,7 +38,6 @@ router.get(
     return res.redirect(`${CLIENT_URL}/auth-successfull`);
   },
 );
-
 router.get("/me", authenticateUser, (req: Request, res: Response) => {
   return res.status(200).json({ s: true, d: req.user });
 });

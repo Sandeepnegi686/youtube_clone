@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import AccountType from "../Types/AccountType";
+import AccountType from "../types/AccountType";
 
 const schema = new Schema<AccountType>({
   userId: { type: String },

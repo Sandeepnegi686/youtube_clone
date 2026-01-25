@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import AuthPayload from "../Types/PayloadType";
+import AuthPayload from "../types/PayloadType";
 const JWT_SECRET = process.env.JWT_SECRET || "";
 
 function authenticateUser(req: Request, res: Response, next: NextFunction) {
@@ -11,7 +11,11 @@ function authenticateUser(req: Request, res: Response, next: NextFunction) {
     }
     const token = authHeader;
     const payload = jwt.verify(token, JWT_SECRET) as AuthPayload;
-    req.user = { _id: payload._id, name: payload.name, email: payload.email };
+    req.user = {
+      _id: payload._id,
+      name: payload.name,
+      email: payload.email,
+    };
     next();
   } catch (error) {
     console.log(error);

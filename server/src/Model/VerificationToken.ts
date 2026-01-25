@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import VerificationTokenType from "../Types/VerificationTokenType";
+import VerificationTokenType from "../types/VerificationTokenType";
 
 const schema = new Schema<VerificationTokenType>({
   identifier: { type: String, unique: true },

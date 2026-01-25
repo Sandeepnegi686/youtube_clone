@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import MovieType from "../Types/MovieType";
+import MovieType from "../types/MovieType";
 
 const schema = new Schema<MovieType>({
   title: { type: String },
