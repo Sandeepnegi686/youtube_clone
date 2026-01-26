@@ -5,6 +5,11 @@ export function useFavorites() {
   const { data, error, isLoading, mutate } = useSWR(
     "/api/movies/favourites",
     fetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    },
   );
 
   return {

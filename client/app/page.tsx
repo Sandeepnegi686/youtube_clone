@@ -9,6 +9,7 @@ import MovieList from "./_components/MovieList";
 export default function Page() {
   const { allMovies } = useGetAllMovies();
   const { favoriteMovies } = useFavorites();
+  console.log(favoriteMovies);
   return (
     <>
       <div className="w-full h-dvh bg-zinc-900">

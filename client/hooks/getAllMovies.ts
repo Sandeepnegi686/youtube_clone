@@ -5,6 +5,11 @@ export function useGetAllMovies() {
   const { data, error, isLoading, mutate } = useSWR(
     "/api/movies/getAllMovies",
     fetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false
+    },
   );
 
   return {

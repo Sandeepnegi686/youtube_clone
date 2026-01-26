@@ -5,6 +5,11 @@ export function useRandomMovie() {
   const { data, error, isLoading, mutate } = useSWR(
     "/api/movies/getrandommovie",
     fetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    },
   );
 
   return {
