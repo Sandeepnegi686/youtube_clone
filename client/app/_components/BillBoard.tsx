@@ -1,7 +1,9 @@
-import { MovieType } from "@/types/MovieType";
+import { useRandomMovie } from "@/hooks/getRandomMovies";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 
-export default function Page({ movie }: { movie: MovieType }) {
+export default function Page() {
+  const { movie } = useRandomMovie();
+
   return (
     <div className="relative h-[56.25vw]">
       <video

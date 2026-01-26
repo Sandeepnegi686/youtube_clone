@@ -1,10 +1,9 @@
-"use client";
 import { MovieType } from "@/types/MovieType";
 import Image from "next/image";
 import { BsFillPlayFill } from "react-icons/bs";
+import FavoriteButton from "./FavoriteButton";
 
 function MovieCard({ movie }: { movie: MovieType }) {
-  function handlePlayButton() {}
   return (
     <div className="group col-span relative h-[12vw]">
       {/* {movie.title} */}
@@ -28,11 +27,12 @@ function MovieCard({ movie }: { movie: MovieType }) {
         <div className="z-10 bg-zinc-800 p-2 lg:p-4 absolute w-full transition shadow-md rounded-b-md">
           <div className="flex items-center gap-3">
             <div
-              onClick={handlePlayButton}
+              // onClick={handlePlayButton}
               className="cursor-pointer w-6 h-6 lg:h-10 lg:w-10 rounded-full flex justify-center items-center transition bg-neutral-300"
             >
               <BsFillPlayFill size={30} />
             </div>
+            <FavoriteButton favoriteIds={movie._id} />
           </div>
           <p className="text-green-400 font-bold mt-4">
             New <span className="text-white">2023</span>

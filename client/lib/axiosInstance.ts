@@ -5,6 +5,7 @@ const API = axios.create({
   baseURL: `${API_BASE_URL}/api/v1/`,
 });
 
+export default API;
 // API.interceptors.request.use(
 //   (config) => {
 //     try {

@@ -1,20 +1,21 @@
-import { MovieType } from "@/types/MovieType";
-import MovieList from "./_components/MovieList";
-import { getAllMovies, getRandomMovie } from "@/hooks/movies";
+"use client";
+
 import Navbar from "./_components/Navbar";
 import BillBoard from "./_components/BillBoard";
+import { useGetAllMovies } from "@/hooks/getAllMovies";
+import { useFavorites } from "@/hooks/useFavorites";
+import MovieList from "./_components/MovieList";
 
-export default async function Page() {
-  const [movie, movies]: [MovieType, MovieType[]] = await Promise.all([
-    getRandomMovie(),
-    getAllMovies(),
-  ]);
+export default function Page() {
+  const { allMovies } = useGetAllMovies();
+  const { favoriteMovies } = useFavorites();
   return (
     <>
       <div className="w-full h-dvh bg-zinc-900">
         <Navbar />
-        <BillBoard movie={movie} />
-        <MovieList title="Trending now" data={movies} />
+        <BillBoard />
+        <MovieList title="Trending now" data={allMovies} />
+        <MovieList title="Favourite Movies" data={favoriteMovies} />
       </div>
       <div className="w-full h-dvh bg-zinc-900"></div>
     </>

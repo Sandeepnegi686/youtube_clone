@@ -24,18 +24,31 @@ async function getAllMovies(_: Request, res: Response) {
     return res.status(500).json({ s: false, m: "Something went wrong.." });
   }
 }
+
+async function getFavMovieByUser(req: Request, res: Response) {
+  try {
+    const user = req.user as any;
+    const person = await UserModel.findById(user._id).populate("favoriteIds")!;
+
+    if (!person) {
+      return res.status(400).json({ s: false, m: "user not found" });
+    }
+
+    return res.status(200).json({ s: true, d: person.favoriteIds });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ s: false, m: "Something went wrong.." });
+  }
+}
+
 async function addFavoriteMovie(
   req: Request<{}, {}, { favoriteMovieId: string }, {}>,
   res: Response,
 ) {
   try {
-    if (!req.user) {
-      return res.status(401).json({ s: false, m: "Unauthorized" });
-    }
     const req_user = req.user as any;
     const movieId = req?.body?.favoriteMovieId;
-    console.log(req.body);
-    if (mongoose.Types.ObjectId.isValid(movieId)) {
+    if (!mongoose.Types.ObjectId.isValid(movieId)) {
       return res.status(400).json({ s: false, m: "unknown book Id" });
     }
 
@@ -53,4 +66,39 @@ async function addFavoriteMovie(
   }
 }
 
-export { getRandomMovie, getAllMovies, addFavoriteMovie };
+async function removeFavoriteMovie(
+  req: Request<{}, {}, { favoriteMovieId: string }, {}>,
+  res: Response,
+) {
+  try {
+    const req_user = req.user as any;
+    const movieId = req?.body?.favoriteMovieId;
+    if (!mongoose.Types.ObjectId.isValid(movieId)) {
+      return res.status(400).json({ s: false, m: "unknown book Id" });
+    }
+    const userId = req_user._id;
+
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { favoriteIds: movieId },
+      },
+      { new: true },
+    );
+    console.log(updatedUser);
+    return res
+      .status(200)
+      .json({ s: true, m: "Movie Removed", d: updatedUser });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ s: false, m: "Something went wrong.." });
+  }
+}
+
+export {
+  getRandomMovie,
+  getAllMovies,
+  addFavoriteMovie,
+  removeFavoriteMovie,
+  getFavMovieByUser,
+};
