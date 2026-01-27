@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import MovieModel from "../Model/MovieModel";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import UserModel from "../Model/UserModel";
 
 async function getRandomMovie(_: Request, res: Response) {
@@ -19,6 +19,29 @@ async function getAllMovies(_: Request, res: Response) {
   try {
     const movies = await MovieModel.find();
     return res.status(200).json({ s: true, d: movies });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ s: false, m: "Something went wrong.." });
+  }
+}
+async function getMovieByIdFunc(
+  req: Request<{ movieId: string }>,
+  res: Response,
+) {
+  try {
+    if (
+      !req.params ||
+      !req.params.movieId ||
+      !Types.ObjectId.isValid(req.params.movieId)
+    ) {
+      return res.status(400).json({ s: false, m: "unknown params" });
+    }
+    const movieId = req.params.movieId;
+    const movie = await MovieModel.findById(movieId);
+    if (!movie) {
+      return res.status(400).json({ s: false, m: "unknown ID" });
+    }
+    return res.status(200).json({ s: true, d: movie });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ s: false, m: "Something went wrong.." });
@@ -101,4 +124,5 @@ export {
   addFavoriteMovie,
   removeFavoriteMovie,
   getFavMovieByUser,
+  getMovieByIdFunc,
 };

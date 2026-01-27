@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import UserModel from "../Model/UserModel";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
